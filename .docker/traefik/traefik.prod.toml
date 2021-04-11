@@ -1,0 +1,31 @@
+[log]
+    level = "DEBUG"
+
+[api]
+    dashboard = true
+
+[entryPoints]
+    [entryPoints.web]
+        address = ":80"
+
+    [entryPoints.websecure]
+        address = ":443"
+        
+        [entrypoints.websecure.http]
+            [entrypoints.websecure.http.tls]
+                certResolver = "letsencrypt"
+
+[certificatesResolvers]
+    [certificatesResolvers.letsencrypt]
+        [certificatesResolvers.letsencrypt.acme]
+            storage = "/var/lib/traefik/acme.json"
+            tlsChallenge = true
+
+[providers]
+    [providers.file]
+        filename = "/etc/traefik/dynamic.toml"
+
+    [providers.docker]
+        network = "server_proxy"
+        watch = true
+        exposedByDefault = false

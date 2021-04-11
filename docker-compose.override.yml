@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+    traefik:
+        volumes:
+            - ./.docker/traefik/traefik.toml:/etc/traefik/traefik.toml
+
+    ghosts:
+        command: -proxymode -proxycontainername=traefik
+        volumes:
+            - /etc/hosts:/app/hosts

@@ -1,0 +1,29 @@
+version: '3.7'
+
+volumes:
+    acme: {}
+
+services:
+    traefik:
+        command: --certificatesresolvers.letsencrypt.acme.email=${traefik_email}
+        volumes:
+            - ./.docker/traefik/traefik.prod.toml:/etc/traefik/traefik.toml
+            - acme:/var/lib/traefik
+        labels:
+            - traefik.http.middlewares.traefik_auth.basicauth.users=${traefik_auth}
+            - ghosts.auth=true
+
+    ghosts:
+        command: -nohosts -proxymode -webnavbgcolor "#ffffff" -webnavtextcolor "#50596c"
+        labels:
+            - traefik.http.middlewares.ghosts_auth.basicauth.users=${ghosts_auth}
+        
+    adminer:
+        labels:
+            - traefik.http.middlewares.adminer_auth.basicauth.users=${adminer_auth}
+            - ghosts.auth=true
+        
+    mailhog:
+        labels:
+            - traefik.http.middlewares.mailhog_auth.basicauth.users=${mailhog_auth}
+            - ghosts.auth=true

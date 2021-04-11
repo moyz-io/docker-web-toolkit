@@ -1,0 +1,21 @@
+[log]
+    level = "DEBUG"
+
+[api]
+    dashboard = true
+
+[entryPoints]
+    [entryPoints.web]
+        address = ":80"
+
+    [entryPoints.websecure]
+        address = ":443"
+
+[providers]
+    [providers.file]
+        filename = "/etc/traefik/dynamic.toml"
+
+    [providers.docker]
+        network = "server_proxy"
+        watch = true
+        exposedByDefault = false

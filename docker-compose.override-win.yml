@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+    ghosts:
+        command: -proxymode -proxycontainername=traefik -hostsforcewindowsstyle
+        volumes:
+            - C:\Windows\System32\drivers\etc\hosts:/app/hosts
