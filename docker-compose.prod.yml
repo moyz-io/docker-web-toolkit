@@ -16,7 +16,8 @@ services:
   ghosts:
     command: -nohosts -proxymode -webnavbgcolor "#ffffff" -webnavtextcolor "#50596c"
     labels:
-      - traefik.http.middlewares.traefik_auth.basicauth.users=${ghosts_auth}
+      - traefik.http.middlewares.ghosts_auth.basicauth.users=${ghosts_auth}
+      - ghosts.auth=true
 
   adminer:
     labels:
