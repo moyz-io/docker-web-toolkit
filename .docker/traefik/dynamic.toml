@@ -1,6 +1,0 @@
-[http.middlewares]
-    [http.middlewares.redirect-to-https]
-        [http.middlewares.redirect-to-https.redirectScheme]
-            permanent = true
-            scheme = "https"
-            port = "443"

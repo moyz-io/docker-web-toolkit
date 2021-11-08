@@ -1,11 +1,35 @@
 version: '3.7'
 
-services:
-    traefik:
-        volumes:
-            - ./.docker/traefik/traefik.toml:/etc/traefik/traefik.toml
+networks:
+  server_mail:
+    name: server_mail
 
-    ghosts:
-        command: -proxymode -proxycontainername=traefik
-        volumes:
-            - /etc/hosts:/app/hosts
+services:
+  traefik:
+    volumes:
+      - ./.docker/traefik/traefik.dev.yml:/etc/traefik/traefik.yml:ro
+
+  ghosts:
+    command: -proxymode proxycontainername=traefik
+    volumes:
+      - /etc/hosts:/app/hosts
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: mailhog
+    restart: unless-stopped
+    networks:
+      - server_proxy
+      - server_mail
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mailhog_secure.entrypoints=websecure
+      - traefik.http.routers.mailhog_secure.rule=Host(`${mailhog_url}`)
+      - traefik.http.routers.mailhog_secure.tls=true
+      - traefik.http.services.mailhog.loadbalancer.server.port=8025
+
+      - ghosts.host=${mailhog_url}
+      - ghosts.category=~Toolkit
+      - ghosts.logo=static/logos/mailhog.png
+      - ghosts.description=Mailhog is an email testing tool for developers.
+      - ghosts.proto=https

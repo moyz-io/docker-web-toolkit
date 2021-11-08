@@ -1,113 +1,78 @@
 version: '3.7'
 
 networks:
-    server_proxy:
-        name: server_proxy
-    server_db:
-        name: server_db
-    server_mail:
-        name: server_mail
+  server_proxy:
+    name: server_proxy
+  server_db:
+    name: server_db
 
 services:
-    traefik:
-        image: traefik:v2.4
-        container_name: traefik
-        restart: unless-stopped
-        ports:
-            - 80:80
-            - 443:443
-        networks:
-            - server_proxy
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./.docker/traefik/dynamic.toml:/etc/traefik/dynamic.toml
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.traefik_http.service=api@internal
-            - traefik.http.routers.traefik_http.rule=Host(`${traefik_url}`)
-            - traefik.http.routers.traefik_http.middlewares=redirect-to-https@file
-            - traefik.http.routers.traefik_http.entrypoints=web
+  traefik:
+    image: traefik:v2.5
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - server_proxy
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik_secure.entrypoints=websecure
+      - traefik.http.routers.traefik_secure.rule=Host(`${traefik_url}`)
+      - traefik.http.routers.traefik_secure.tls=true
+      - traefik.http.routers.traefik_secure.service=api@internal
 
-            - traefik.http.routers.traefik_https.service=api@internal
-            - traefik.http.routers.traefik_https.rule=Host(`${traefik_url}`)
-            - traefik.http.routers.traefik_https.entrypoints=websecure
-            - traefik.http.routers.traefik_https.tls=true
+      - ghosts.host=${traefik_url}
+      - ghosts.category=~Toolkit
+      - ghosts.logo=static/logos/traefik.png
+      - ghosts.description=Traefik is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy.
+      - ghosts.proto=https
 
-            - ghosts.host=${traefik_url}
-            - ghosts.category=~toolkit
-            - ghosts.logo=static/logos/traefik.png
-            - ghosts.description=Traefik is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy.
-            - ghosts.proto=https
+  ghosts:
+    image: lobre/ghosts
+    container_name: ghosts
+    restart: unless-stopped
+    networks:
+      - server_proxy
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./logos/:/app/static/logos/
+    depends_on: 
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ghosts_secure.entrypoints=websecure
+      - traefik.http.routers.ghosts_secure.rule=Host(`${ghosts_url}`)
+      - traefik.http.routers.ghosts_secure.tls=true
 
-    ghosts:
-        image: lobre/ghosts
-        container_name: ghosts
-        restart: unless-stopped
-        networks:
-            - server_proxy
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./logos/:/app/static/logos/
-        depends_on:
-            - traefik
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.ghosts_http.rule=Host(`${ghosts_url}`)
-            - traefik.http.routers.ghosts_http.middlewares=redirect-to-https@file
-            - traefik.http.routers.ghosts_http.entrypoints=web
+      - ghosts.host=${ghosts_url}
+      - ghosts.noweb=true
+      - ghosts.proto=https
 
-            - traefik.http.routers.ghosts_https.rule=Host(`${ghosts_url}`)
-            - traefik.http.routers.ghosts_https.entrypoints=websecure
-            - traefik.http.routers.ghosts_https.tls=true
+  adminer:
+    image: adminer:4.8.1-standalone
+    container_name: adminer
+    restart: unless-stopped
+    networks:
+      - server_proxy
+      - server_db
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./.docker/adminer/plugins-enabled/:/var/www/html/plugin-enabled/:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.adminer_secure.entrypoints=websecure
+      - traefik.http.routers.adminer_secure.rule=Host(`${adminer_url}`)
+      - traefik.http.routers.adminer_secure.tls=true
 
-            - ghosts.noweb=true
-            - ghosts.proto=https
-
-    adminer:
-        image: adminer:4.8.0-standalone
-        container_name: adminer
-        restart: unless-stopped
-        networks:
-            - server_proxy
-            - server_db
-        volumes:
-            - ./.docker/adminer/plugins-enabled/:/var/www/html/plugins-enabled/:ro
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.adminer_http.rule=Host(`${adminer_url}`)
-            - traefik.http.routers.adminer_http.middlewares=redirect-to-https@file
-            - traefik.http.routers.adminer_http.entrypoints=web
-
-            - traefik.http.routers.adminer_https.rule=Host(`${adminer_url}`)
-            - traefik.http.routers.adminer_https.entrypoints=websecure
-            - traefik.http.routers.adminer_https.tls=true
-
-            - ghosts.host=${adminer_url}
-            - ghosts.category=~toolkit
-            - ghosts.logo=static/logos/adminer.png
-            - ghosts.description=Database management in a single PHP file.
-            - ghosts.proto=https
-
-    mailhog:
-        image: mailhog/mailhog:v1.0.1
-        container_name: mailhog
-        restart: unless-stopped
-        networks:
-            - server_proxy
-            - server_mail
-        labels:
-            - traefik.enable=true
-            - traefik.http.services.mailhog.loadbalancer.server.port=8025
-            - traefik.http.routers.mailhog_http.rule=Host(`${mailhog_url}`)
-            - traefik.http.routers.mailhog_http.middlewares=redirect-to-https@file
-            - traefik.http.routers.mailhog_http.entrypoints=web
-
-            - traefik.http.routers.mailhog_https.rule=Host(`${mailhog_url}`)
-            - traefik.http.routers.mailhog_https.entrypoints=websecure
-            - traefik.http.routers.mailhog_https.tls=true
-
-            - ghosts.host=${mailhog_url}
-            - ghosts.category=~toolkit
-            - ghosts.logo=static/logos/mailhog.png
-            - ghosts.description=Mailhog is an email testing tool for developers.
-            - ghosts.proto=https
+      - ghosts.host=${adminer_url}
+      - ghosts.category=~Toolkit
+      - ghosts.logo=static/logos/adminer.png
+      - ghosts.description=Adminer is a full-featured database management tool written in PHP.
+      - ghosts.proto=https
+    
