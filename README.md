@@ -7,7 +7,7 @@ It contains the 4 following pieces of software:
 - [Traefik](https://doc.traefik.io/traefik/): a reverse proxy listening on port 80 and 443 for routing requests to specific containers.
 - [Ghosts](https://github.com/lobre/ghosts): tool to automatically register local domain names into the native OS `hosts` file.
 - [Adminer](https://www.adminer.org/): tool to manage all databases connected in a same docker network.
-- [Mailhog](https://github.com/mailhog/MailHog): SMTP server to catch and browse all mails sent from the local application.
+- [Mailhog](https://github.com/mailhog/MailHog): SMTP server to catch and browse all mails sent from the local application (development environment).
 
 ## Set up
 
