@@ -83,6 +83,8 @@ To add services connected with the toolkit, you have to add labels into the serv
                 - traefik.http.routers.<your_app_name>_secure.entrypoints=websecure
                 - traefik.http.routers.<your_app_name>_secure.rule=Host(`${your_app_url}`) # to link url to this service
                 - traefik.http.routers.<your_app_name>_secure.tls=true
+
+                # just in prod env
                 - traefik.http.routers.<your_app_name>_secure.tls.certresolver=letsencrypt
 
                 - ghosts.host=${your_app_url}
