@@ -5,7 +5,7 @@ volumes:
 
 services:
   traefik:
-    command: --certificatesResolvers.letsencrypt.acme.email=${traefik_email}
+    command: --certificatesresolvers.letsencrypt.acme.email=${traefik_email}
     volumes:
       - ./.docker/traefik/traefik.prod.yml:/etc/traefik/traefik.yml:ro
       - acme:/var/lib/traefik
