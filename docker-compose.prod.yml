@@ -12,6 +12,7 @@ services:
     labels:
       - traefik.http.middlewares.traefik_auth.basicauth.users=${traefik_auth}
       - traefik.http.routers.traefik_secure.middlewares=traefik_auth
+      - traefik.http.routers.traefik_secure.tls.certresolver=letsencrypt
       - ghosts.auth=true
 
   ghosts:
@@ -19,10 +20,12 @@ services:
     labels:
       - traefik.http.middlewares.ghosts_auth.basicauth.users=${ghosts_auth}
       - traefik.http.routers.ghosts_secure.middlewares=ghosts_auth
+      - traefik.http.routers.ghosts_secure.tls.certresolver=letsencrypt
       - ghosts.auth=true
 
   adminer:
     labels:
       - traefik.http.middlewares.adminer_auth.basicauth.users=${adminer_auth}
       - traefik.http.routers.adminer_secure.middlewares=adminer_auth
+      - traefik.http.routers.adminer_secure.tls.certresolver=letsencrypt
       - ghosts.auth=true
