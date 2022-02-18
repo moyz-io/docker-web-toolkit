@@ -99,6 +99,14 @@ You can define the port exposed by your service with this label:
 
 If your services expose just one port, you can omit this label.
 
+You can also define a basic authentication for your services with these labels:
+
+    - traefik.http.middlewares.<your_app_name>_auth.basicauth.users=${traefik_auth}
+    - traefik.http.routers.<your_app_name>_secure.middlewares=traefik_auth
+    - ghosts.auth=true
+
+You can see the documentation for authentication on the [traefik documentation](https://doc.traefik.io/traefik/v2.0/middlewares/basicauth/).
+
 ## How to configure MailHog
 
 The application container have to be link with the `server_mail` network.
