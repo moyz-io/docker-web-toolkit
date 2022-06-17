@@ -23,8 +23,6 @@ First, you have to create a `.env` file at the root of the project, and add the 
 
 You can find an example in `.env.example` file.
 
-### Development environment on Linux
-
 First, you must generate SSL certificates to avoid warning on browsers.
 You have to install [mkcert](https://github.com/FiloSottile/mkcert).
 
@@ -38,7 +36,9 @@ And then, you can create certificate with:
 
 Ensure your certificates are `local-cert.pem` and `local-key.pem` and there are in the `certs` folder.
 
-Then, you can start the docker stack with:
+### Development environment on Linux
+
+You can start the docker stack with:
 
     $ docker-compose up -d
 
