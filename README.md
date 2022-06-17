@@ -25,7 +25,20 @@ You can find an example in `.env.example` file.
 
 ### Development environment on Linux
 
-You can start the docker stack with:
+First, you must generate SSL certificates to avoid warning on browsers.
+You have to install [mkcert](https://github.com/FiloSottile/mkcert).
+
+Then, you can run:
+
+    $ mkcert -install
+
+And then, you can create certificate with:
+
+    $ mkcert -cert-file ./certs/local-cert.pem -key-file ./certs/local-key.pem "traefik.local" "ghosts.local" "adminer.local" "mailhog.local" "*.docker.local"
+
+Ensure your certificates are `local-cert.pem` and `local-key.pem` and there are in the `certs` folder.
+
+Then, you can start the docker stack with:
 
     $ docker-compose up -d
 

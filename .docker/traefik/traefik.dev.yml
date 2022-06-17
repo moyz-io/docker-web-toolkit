@@ -21,3 +21,7 @@ providers:
     exposedByDefault: false
     network: "server_proxy"
     watch: true
+
+  file:
+    filename: "/etc/traefik/certificates.yml"
+    watch: true

@@ -8,6 +8,8 @@ services:
   traefik:
     volumes:
       - ./.docker/traefik/traefik.dev.yml:/etc/traefik/traefik.yml:ro
+      - ./.docker/traefik/certificates.dev.yml:/etc/traefik/certificates.yml
+      - ./certs:/etc/certs:ro
 
   ghosts:
     command: -proxymode proxycontainername=traefik
