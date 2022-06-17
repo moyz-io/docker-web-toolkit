@@ -23,7 +23,7 @@ First, you have to create a `.env` file at the root of the project, and add the 
 
 You can find an example in `.env.example` file.
 
-First, you must generate SSL certificates to avoid warning on browsers.
+Then, you must generate SSL certificates to avoid warning on browsers.
 You have to install [mkcert](https://github.com/FiloSottile/mkcert).
 
 Then, you can run:
