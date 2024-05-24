@@ -8,6 +8,8 @@ entryPoints:
   web:
     address: :80
     http:
+      middlewares:
+        - security
       redirections:
         entryPoint:
           to: websecure
@@ -16,8 +18,22 @@ entryPoints:
   websecure:
     address: :443
     http:
+      middlewares:
+        - security
       tls:
         certResolver: letsencrypt
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+
+http:
+  middlewares:
+    security:
+      headers:
+        customResponseHeaders:
+          x-powered-by: "" # Hide PHP version for example
 
 providers:
   docker:
