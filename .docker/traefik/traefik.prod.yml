@@ -1,6 +1,10 @@
 log:
   level: DEBUG
 
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  format: json
+
 api:
   dashboard: true
 

@@ -1,3 +1,6 @@
+./.docker/traefik/logs/*
+./.docker/traefik/logs/.gitkeep
+
 /.env
 
 /certs/*

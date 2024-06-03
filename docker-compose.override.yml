@@ -1,5 +1,3 @@
-version: '3.7'
-
 networks:
   server_mail:
     name: server_mail

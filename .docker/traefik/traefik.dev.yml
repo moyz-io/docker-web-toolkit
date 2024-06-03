@@ -1,6 +1,8 @@
 log:
   level: DEBUG
 
+accessLog: {}
+
 api:
   dashboard: true
 
@@ -11,7 +13,6 @@ entryPoints:
       redirections:
         entryPoint:
           to: websecure
-
 
   websecure:
     address: :443
