@@ -4,3 +4,4 @@ http:
       headers:
         customResponseHeaders:
           x-powered-by: "" # Hide PHP version for example
+          server: "" # Hide server name and version
