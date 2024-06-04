@@ -1,0 +1,6 @@
+http:
+  middlewares:
+    security:
+      headers:
+        customResponseHeaders:
+          x-powered-by: "" # Hide PHP version for example

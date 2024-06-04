@@ -8,6 +8,7 @@ services:
       - ./.docker/traefik/traefik.prod.yml:/etc/traefik/traefik.yml:ro
       - acme:/var/lib/traefik
       - ./.docker/traefik/logs:/var/log/traefik
+      - ./.docker/traefik/security.prod.yml:/etc/traefik/security.yml
     labels:
       - traefik.http.middlewares.traefik_auth.basicauth.users=${traefik_auth}
       - traefik.http.routers.traefik_secure.middlewares=traefik_auth

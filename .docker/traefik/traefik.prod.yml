@@ -13,17 +13,16 @@ entryPoints:
     address: :80
     http:
       middlewares:
-        - security
+        - security@file
       redirections:
         entryPoint:
           to: websecure
-
 
   websecure:
     address: :443
     http:
       middlewares:
-        - security
+        - security@file
       tls:
         certResolver: letsencrypt
 
@@ -43,6 +42,10 @@ providers:
   docker:
     exposedByDefault: false
     network: "server_proxy"
+    watch: true
+
+  file:
+    filename: "/etc/traefik/security.yml"
     watch: true
 
 certificatesResolvers:
